@@ -179,6 +179,26 @@ def user_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def raw_data(df):
+    """Displays raw data on user request."""
+    counter = 0
+    total = df.shape[0]
+    # Set Pandas to display all columns
+    pd.set_option('display.max_columns', None)
+    while True:
+        # Display 5 rows of data
+        if counter + 5 < total:
+            print(df[counter:counter + 5])
+            counter += 5
+        # Display end of data set
+        else:
+            print(df[counter:])
+            print('\nEnd of data set.\n')
+            break
+        # Ask if the user would like to continue
+        display_data = input('\nWould you like to display more of the raw data? Enter yes or no.\n')
+        if display_data.lower() != 'yes':
+            break
 
 def main():
     while True:
@@ -190,7 +210,9 @@ def main():
         trip_duration_stats(df)
         user_stats(df)
 
-        # TODO Raw data request
+        display_data = input('\nWould you like to see the raw data? Enter yes or no.\n')
+        if display_data.lower() == 'yes':
+            raw_data(df)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
