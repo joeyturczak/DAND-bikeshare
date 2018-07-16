@@ -122,8 +122,9 @@ def station_stats(df):
     print('Most commonly used end station: {}'.format(end))
 
     # display most frequent combination of start station and end station trip
-    start_end = df.groupby(['Start Station'])['End Station'].value_counts().index[0]
-    print('Most frequent combination of start and end stations: {}'.format(start_end))
+    start_end = df[['Start Station', 'End Station']].groupby(['Start Station', 'End Station']).size().reset_index(name='Count')
+    start_end = start_end.sort_values(by='Count', ascending=False).iloc[0]
+    print('Most frequent combination of start and end stations: \n{}'.format(start_end[['Start Station', 'End Station']]))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -136,12 +137,16 @@ def trip_duration_stats(df):
     start_time = time.time()
 
     # display total travel time
-    total_duration = df['Trip Duration'].sum()
-    print('Total travel time: {}'.format(total_duration))
+    total_duration = int(df['Trip Duration'].sum())
+    minutes = total_duration // 60
+    hours = minutes // 60
+    days = hours // 24
+    print('Total travel time: {}:{}:{}:{}'.format(days, hours % 24, minutes % 60, total_duration % 60))
 
     # display mean travel time
-    mean_duration = df['Trip Duration'].mean()
-    print('Mean travel time: {}'.format(mean_duration))
+    mean_duration = int(df['Trip Duration'].mean())
+    minutes = mean_duration // 60
+    print('Mean travel time: {}:{}'.format(minutes % 60, mean_duration % 60))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -184,6 +189,8 @@ def main():
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df)
+
+        # TODO Raw data request
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
