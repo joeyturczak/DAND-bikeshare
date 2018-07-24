@@ -181,7 +181,9 @@ def user_stats(df):
 
 def raw_data(df):
     """Displays raw data on user request."""
+    # Counter for next row to display
     counter = 0
+    # Total number of rows
     total = df.shape[0]
     # Set Pandas to display all columns
     pd.set_option('display.max_columns', None)
